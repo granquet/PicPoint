@@ -20,16 +20,12 @@ for f in glob.iglob(args.pic):
     dtOff = datetime.strptime(args.offset, "%H:%M:%S")
     myImg.setDateOffset(dtOff)
     collection.append(myImg)
-    #myImg.updatePosition(999, 4200000, 4200000, "N", "E")
 
-print("sorting")
 sorted_collec = sorted(collection, key=attrgetter("date"))
+g = Tracks(args.gpx)
 
 for n in sorted_collec:
-    print(n.date)
-
-g = Tracks(args.gpx)
-pt = g.findPointAtDatetime(datetime.strptime('2017-09-12 07:44:08', "%Y-%m-%d %H:%M:%S"))
-print(pt)
-pt = g.findPointClosestToDatetime(datetime.strptime('2017-09-12 07:44:00', "%Y-%m-%d %H:%M:%S"))
-print(pt)
+    print(n.getDate())
+    pt = g.findPointClosestToDatetime(n.getDate())
+    print(pt)
+    #myImg.updatePosition(999, 4200000, 4200000, "N", "E")
