@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 import piexif
 from PIL import Image
 
@@ -23,6 +23,10 @@ class Photo:
         exif_bytes = piexif.dump(self.exif)
         piexif.insert(exif_bytes, self.fname)
 
+    def setDateOffset(self, off):
+        self.off = off
+
     def getDate(self):
-        return self.date
+        td = timedelta(hours=self.off.hour, minutes=self.off.minute, seconds=self.off.second)
+        return self.date + td
 
