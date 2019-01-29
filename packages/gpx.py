@@ -1,7 +1,11 @@
 from operator import attrgetter
+from packages.algo import bisect_tuple
 import datetime
 import gpxpy
 import gpxpy.gpx
+
+def cmpDate(a ,b):
+    return a > b.time
 
 class Tracks:
     def __init__(self, fname):
@@ -22,14 +26,9 @@ class Tracks:
                 return point
 
     def findPointClosestToDatetime(self, dt):
-        prev_pt = None
-        for point in self.points:
-            if point.time > dt:
-                if prev_pt == None:
-                    return point
-                if abs(prev_pt.time - dt) > abs(point.time - dt):
-                    return point
-                else:
-                    return prev_pt
-            prev_pt = point
+        tup = bisect_tuple(self.points, dt, cmpDate)
+        if abs(self.points[tup[0]].time - dt) > abs(self.points[tup[1]].time - dt):
+            return self.points[tup[1]]
+        else:
+            return self.points[tup[0]]
 
