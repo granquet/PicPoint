@@ -24,9 +24,9 @@ class Photo:
         piexif.insert(exif_bytes, self.fname)
 
     def setDateOffset(self, off):
-        self.off = off
+        self.sign,self.off = off
 
     def getDate(self):
-        td = timedelta(hours=self.off.hour, minutes=self.off.minute, seconds=self.off.second)
+        td = timedelta(hours=self.sign * self.off.hour, minutes=self.sign * self.off.minute, seconds=self.sign * self.off.second)
         return self.date + td
 
