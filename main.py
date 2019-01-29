@@ -7,7 +7,7 @@ import argparse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--offset', help='date offset to adjust timestamps between gps track and pictures in %H:%M:%S format')
+parser.add_argument('--offset', help='date offset to adjust timestamps between gps track and pictures in H:M:S format')
 parser.add_argument('--pic', help='path to a single picture or a path containing a collection of pictures')
 parser.add_argument('--gpx', help='path to a single gpx file')
 args = parser.parse_args()
