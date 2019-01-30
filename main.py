@@ -4,6 +4,9 @@ import glob
 from datetime import datetime
 from operator import attrgetter
 import argparse
+import logging, sys
+
+logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
 
 parser = argparse.ArgumentParser()
@@ -12,7 +15,7 @@ parser.add_argument('--pic', help='path to a single picture or a path containing
 parser.add_argument('--gpx', help='path to a single gpx file', required=True)
 args = parser.parse_args()
 
-print(args)
+logging.debug("Parsed arguments {}".format(args))
 
 collection = []
 
@@ -23,6 +26,7 @@ else:
     sign = -1 if args.offset.startswith('-') else 1
     args.offset = args.offset[1:] if sign == -1 else args.offset
     dtOff = datetime.strptime(args.offset, "%H:%M:%S")
+    logging.debug("Offset set to: {}".format(dtOff))
 
 for f in glob.iglob(args.pic):
     myImg = Photo(f)
@@ -33,7 +37,6 @@ sorted_collec = sorted(collection, key=attrgetter("date"))
 g = Tracks(args.gpx)
 
 for n in sorted_collec:
-    print(n.getDate())
     pt = g.findPointClosestToDatetime(n.getDate())
-    print(pt)
     #myImg.updatePosition(999, 4200000, 4200000, "N", "E")
+    logging.info("Picture {} at timestamp {}, associated with: {}".format(n.fname, n.getDate(), pt))
