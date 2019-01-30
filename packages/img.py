@@ -1,6 +1,7 @@
 from datetime import datetime,timedelta
 import piexif
 from PIL import Image
+import logging, sys
 
 
 class Photo:
@@ -15,11 +16,19 @@ class Photo:
         return
 
     def updatePosition(self, alt, lat, lon, reflat, reflon):
-        self.exif["GPS"][piexif.GPSIFD.GPSAltitude] = (alt, 1)
-        self.exif["GPS"][piexif.GPSIFD.GPSLatitudeRef] = reflat;
-        self.exif["GPS"][piexif.GPSIFD.GPSLatitude] = [lat, 1000000];
-        self.exif["GPS"][piexif.GPSIFD.GPSLongitudeRef] = reflon;
-        self.exif["GPS"][piexif.GPSIFD.GPSLongitude] = [lon, 1000000];
+        ratio = int(1e7)
+        logging.debug("Writing exif data: ( alt: {} lat: {} lon: {} )".format(alt,lat,lon))
+
+        altRef = 0
+        if alt < 0:
+            altRef = 1
+
+        self.exif["GPS"][piexif.GPSIFD.GPSAltitudeRef] = altRef
+        self.exif["GPS"][piexif.GPSIFD.GPSAltitude] = (int(abs(alt) * 1e2), int(1e2))
+        self.exif["GPS"][piexif.GPSIFD.GPSLatitudeRef] = reflat
+        self.exif["GPS"][piexif.GPSIFD.GPSLatitude] = (int(lat * ratio), ratio)
+        self.exif["GPS"][piexif.GPSIFD.GPSLongitudeRef] = reflon
+        self.exif["GPS"][piexif.GPSIFD.GPSLongitude] = (int(lon * ratio), ratio)
         exif_bytes = piexif.dump(self.exif)
         piexif.insert(exif_bytes, self.fname)
 

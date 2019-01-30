@@ -38,5 +38,6 @@ g = Tracks(args.gpx)
 
 for n in sorted_collec:
     pt = g.findPointClosestToDatetime(n.getDate())
-    #myImg.updatePosition(999, 4200000, 4200000, "N", "E")
+    # Seems all points I'm getting from gpxs are oriented N/E ?
+    n.updatePosition(pt.elevation, pt.latitude, pt.longitude, "N", "E")
     logging.info("Picture {} at timestamp {}, associated with: {}".format(n.fname, n.getDate(), pt))
